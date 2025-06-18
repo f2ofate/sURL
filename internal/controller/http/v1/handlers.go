@@ -1,0 +1,47 @@
+package v1
+
+import (
+	"io"
+	"net/http"
+	"sURL/internal/storage"
+
+	"github.com/go-chi/chi/v5"
+)
+
+// StoreURL получает тело запроса и сохраняет его в хранилище
+func StoreURL(s storage.Repository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Content-Type") != "text/plain" {
+			http.Error(w, "Content-Type must be only text/plain", http.StatusBadRequest)
+			return
+		}
+
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "Error reading request body", http.StatusInternalServerError)
+			return
+		}
+		defer r.Body.Close()
+
+		shortUrl, ok := s.AddShortURL(string(body))
+		if !ok {
+			http.Error(w, "Invalid URL format. Must be http://... or https://...", http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte("http://localhost:8080/" + shortUrl))
+	}
+}
+
+// RedirectURL при переходе на сокращённую ссылку перенаправляет на оригинальную
+func RedirectURL(s storage.Repository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := chi.URLParam(r, "id")
+		originUrl := s.GetOriginURL(id)
+
+		w.Header().Set("Content-Type", "text/plain")
+		http.Redirect(w, r, originUrl, http.StatusTemporaryRedirect)
+	}
+}
