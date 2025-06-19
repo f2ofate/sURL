@@ -11,14 +11,9 @@ import (
 // StoreURL получает тело запроса и сохраняет его в хранилище
 func StoreURL(s storage.Repository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Content-Type") != "text/plain" {
-			http.Error(w, "Content-Type must be only text/plain", http.StatusBadRequest)
-			return
-		}
-
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			http.Error(w, "Error reading request body", http.StatusInternalServerError)
+			http.Error(w, "Error reading request body: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 		defer r.Body.Close()
