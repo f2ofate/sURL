@@ -8,9 +8,9 @@ import (
 )
 
 func Run(port string) {
-	storage := &memory.MemStorage{}
+	storage := memory.MemStorage{}
 
-	if err := http.ListenAndServe(":"+port, shttp.NewRouter(storage)); err != nil {
+	if err := http.ListenAndServe(":"+port, shttp.NewRouter(&storage)); err != nil {
 		slog.Error(err.Error())
 	}
 }
