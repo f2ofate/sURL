@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
-	v1 "sURL/internal/controller/http/v1"
+	"sURL/internal/api/v1"
 	"sURL/internal/storage/memory"
 	"strings"
 	"testing"

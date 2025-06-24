@@ -1,8 +1,8 @@
-package http
+package api
 
 import (
 	"net/http"
-	v1 "sURL/internal/controller/http/v1"
+	"sURL/internal/api/v1"
 	"sURL/internal/storage"
 
 	"github.com/go-chi/chi/v5"
