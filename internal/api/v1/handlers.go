@@ -9,7 +9,7 @@ import (
 )
 
 // StoreURL получает тело запроса и сохраняет его в хранилище
-func StoreURL(s storage.Repository) http.HandlerFunc {
+func StoreURL(s storage.Repository, resaultAddr string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -26,7 +26,7 @@ func StoreURL(s storage.Repository) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusCreated)
-		w.Write([]byte("http://localhost:8080/" + shortUrl))
+		w.Write([]byte(resaultAddr + "/" + shortUrl))
 	}
 }
 
