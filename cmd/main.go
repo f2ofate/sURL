@@ -1,7 +1,13 @@
 package main
 
-import "sURL/internal/app"
+import (
+	"sURL/internal/config"
+	"sURL/internal/storage/memory"
+)
 
 func main() {
-	app.Run("8080")
+	storage := memory.MemStorage{}
+
+	app := config.Configure(&storage)
+	app.Run()
 }
