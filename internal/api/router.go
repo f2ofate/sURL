@@ -8,10 +8,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func NewRouter(s storage.Repository) http.Handler {
+func NewRouter(s storage.Repository, resaultAddr string) http.Handler {
 	r := chi.NewRouter()
 
-	r.Post("/", v1.StoreURL(s))
+	r.Post("/", v1.StoreURL(s, resaultAddr))
 	r.Get("/{id}", v1.RedirectURL(s))
 
 	return r
