@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"sURL/internal/storage"
@@ -24,9 +25,11 @@ func StoreURL(s storage.Repository, resaultAddr string) http.HandlerFunc {
 			return
 		}
 
+		response := fmt.Sprintf("%s/%s", resaultAddr, shortUrl)
+
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusCreated)
-		w.Write([]byte(resaultAddr + "/" + shortUrl))
+		w.Write([]byte(response))
 	}
 }
 
