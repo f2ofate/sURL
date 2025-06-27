@@ -11,7 +11,7 @@ import (
 func NewRouter(s storage.Repository, resaultAddr string) http.Handler {
 	r := chi.NewRouter()
 
-	r.Post("/", v1.StoreURL(s, resaultAddr))
+	r.Post("/api/shorten", v1.StoreURL(s, resaultAddr))
 	r.Get("/{id}", v1.RedirectURL(s))
 
 	return r
