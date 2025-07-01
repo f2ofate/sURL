@@ -33,23 +33,30 @@ func TestStoreURL(t *testing.T) {
 			name: "Body with URL",
 			want: want{
 				code: 201,
-				body: "https://google.com",
+				body: `{"url":"https://google.com"}`,
 			},
 		},
 		{
 			name: "Body with wrong URL",
 			want: want{
 				code: 400,
-				body: "htt://google.com",
+				body: `{"url":"htt://google.com"}`,
+			},
+		},
+		{
+			name: "Body text/plain",
+			want: want{
+				code: 400,
+				body: "http://google.com",
 			},
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodGet, "/", strings.NewReader(test.want.body))
+			req := httptest.NewRequest(http.MethodPost, "/api/shorten", strings.NewReader(test.want.body))
 			w := httptest.NewRecorder()
 
-			handler := v1.StoreURL(&s)
+			handler := v1.StoreURL(&s, "http://localhost:8080")
 			handler(w, req)
 
 			res := w.Result()
