@@ -30,7 +30,8 @@ func StoreURL(s storage.Repository, resaultAddr string) http.HandlerFunc {
 		defer r.Body.Close()
 
 		if err = json.Unmarshal(body, &req); err != nil {
-			http.Error(w, "Error reading body: "+err.Error(), http.StatusBadRequest)
+			http.Error(w, "Error unmarshall body: "+err.Error(), http.StatusBadRequest)
+			return
 		}
 
 		shortUrl, ok := s.AddShortURL(req.URL)
