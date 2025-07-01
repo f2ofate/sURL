@@ -17,13 +17,6 @@ type Config struct {
 	Address          string `env:"SERVER_ADDRESS"`
 }
 
-func (c *Config) Run() {
-	fmt.Printf("Server address: %s\n\rBasic resault address: %s\n\r", c.Address, c.BasicResaultAddr)
-	if err := http.ListenAndServe(c.Address, api.NewRouter(c.Storage, c.BasicResaultAddr)); err != nil {
-		log.Fatal(err.Error())
-	}
-}
-
 func Configure(storage storage.Repository) *Config {
 	config := &Config{
 		Storage:          storage,
@@ -40,4 +33,12 @@ func Configure(storage storage.Repository) *Config {
 	}
 
 	return config
+}
+
+func (c *Config) Run() {
+	fmt.Printf("Server address: %s\n\rBasic resault address: %s\n\r", c.Address, c.BasicResaultAddr)
+	if err := http.ListenAndServe(c.Address, api.NewRouter(c.Storage, c.BasicResaultAddr)); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
 }
